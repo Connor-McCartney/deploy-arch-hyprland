@@ -38,7 +38,7 @@ mkdir wayland-sessions
 cd wayland-sessions
 printf "[Desktop Entry]\nExec=/usr/bin/hyprland\n" > hyprland.desktop
 sed -i 's/'#autologin-user='/'autologin-user=connor'/g' /etc/lightdm/lightdm.conf
-sed -i 's/'#autologin-session='/'autologin-session=dwm'/g' /etc/lightdm/lightdm.conf
+sed -i 's/'#autologin-session='/'autologin-session=hyprland'/g' /etc/lightdm/lightdm.conf
 
 
 useradd -m -G users,wheel,audio,video,autologin -s /bin/bash connor

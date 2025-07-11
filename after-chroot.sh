@@ -30,15 +30,15 @@ grub-mkconfig -o /boot/grub/grub.cfg
 
 
 # lightdm auto-login
-pacman -S --noconfirm lightdm
-systemctl enable lightdm
-groupadd -r autologin
-cd /usr/share
-mkdir wayland-sessions
-cd wayland-sessions
-printf "[Desktop Entry]\nExec=/usr/bin/hyprland\n" > hyprland.desktop
-sed -i 's/'#autologin-user='/'autologin-user=connor'/g' /etc/lightdm/lightdm.conf
-sed -i 's/'#autologin-session='/'autologin-session=hyprland'/g' /etc/lightdm/lightdm.conf
+#pacman -S --noconfirm lightdm
+#systemctl enable lightdm
+#groupadd -r autologin
+#cd /usr/share
+#mkdir wayland-sessions
+#cd wayland-sessions
+#printf "[Desktop Entry]\nExec=/usr/bin/hyprland\n" > hyprland.desktop
+#sed -i 's/'#autologin-user='/'autologin-user=connor'/g' /etc/lightdm/lightdm.conf
+#sed -i 's/'#autologin-session='/'autologin-session=hyprland'/g' /etc/lightdm/lightdm.conf
 
 
 useradd -m -G users,wheel,audio,video,autologin -s /bin/bash connor

@@ -33,4 +33,4 @@ genfstab -U /mnt >> /mnt/etc/fstab
 cd /mnt
 wget https://raw.githubusercontent.com/Connor-McCartney/deploy-arch-hyprland/refs/heads/main/after-chroot.sh
 cat after-chroot.sh | arch-chroot /mnt
-printf "install finished :)"
+printf "install finished :)\n\n"

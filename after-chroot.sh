@@ -28,9 +28,13 @@ printf "GRUB_TIMEOUT=1\nGRUB_DISTRIBUTOR=\"Arch\"\nGRUB_CMDLINE_LINUX=\"loglevel
 grub-mkconfig -o /boot/grub/grub.cfg
 
 
-# lightdm auto-login
-#pacman -S --noconfirm lightdm
-#systemctl enable lightdm
+# sddm auto-login
+pacman -S --noconfirm sddm
+mkdir /etc/sddm.conf.d
+printf "[Auto login]\nUser=connor\nSession=hyprland.desktop\n" > /etc/sddm.conf.d/autologin.conf
+systemctl enable sddm
+
+
 #groupadd -r autologin
 #cd /usr/share
 #mkdir wayland-sessions

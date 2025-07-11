@@ -9,7 +9,6 @@ echo "arch" > /etc/hostname
 
 pacman -S --noconfirm hyprland
 pacman -S --noconfirm networkmanager neovim sudo base-devel os-prober grub vlc htop git wget ripgrep fzf bat fd kitty
-pacman -S --noconfirm pulseaudio pavucontrol
 systemctl enable NetworkManager
 
 # non-LUKS

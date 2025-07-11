@@ -15,7 +15,7 @@ systemctl enable NetworkManager
 
 # non-LUKS
 printf "GRUB_TIMEOUT=1\nGRUB_DISTRIBUTOR=\"Arch\"\nGRUB_CMDLINE_LINUX=\"loglevel=1 nowatchdog nvme_load=YES fsck.mode=skip modprobe.blacklist=iTCO_wdt\"\n" > /etc/default/grub
-grub-install /dev/vda # BIOS
+grub-install /dev/sda # BIOS
 #pacman -S efibootmgr --noconfirm; grub-install --target=x86_64-efi --efi-directory=/boot # UEFI
 grub-mkconfig -o /boot/grub/grub.cfg
 

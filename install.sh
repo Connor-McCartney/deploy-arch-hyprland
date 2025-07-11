@@ -4,8 +4,7 @@ umount /dev/*
 set -e
 
 # 1. BIOS
-DISK="/dev/vda"
-#DISK="/dev/sda"
+DISK="/dev/sda"
 printf "o\nn\n\n\n\n+8G\nn\n\n\n\n\nt\n1\n82\na\n2\nw\n" | fdisk $DISK  
 mkswap "$DISK""1"
 mkfs.ext4 "$DISK""2"

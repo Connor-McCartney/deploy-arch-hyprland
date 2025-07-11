@@ -31,7 +31,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 # sddm auto-login
 pacman -S --noconfirm sddm
 mkdir /etc/sddm.conf.d
-printf "[Auto login]\nUser=connor\nSession=hyprland.desktop\n" > /etc/sddm.conf.d/autologin.conf
+printf "[Autologin]\nUser=connor\nSession=hyprland.desktop\n" > /etc/sddm.conf.d/autologin.conf
 systemctl enable sddm
 
 

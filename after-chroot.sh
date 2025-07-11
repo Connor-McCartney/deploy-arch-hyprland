@@ -35,16 +35,7 @@ printf "[Auto login]\nUser=connor\nSession=hyprland.desktop\n" > /etc/sddm.conf.
 systemctl enable sddm
 
 
-#groupadd -r autologin
-#cd /usr/share
-#mkdir wayland-sessions
-#cd wayland-sessions
-#printf "[Desktop Entry]\nExec=/usr/bin/hyprland\n" > hyprland.desktop
-#sed -i 's/'#autologin-user='/'autologin-user=connor'/g' /etc/lightdm/lightdm.conf
-#sed -i 's/'#autologin-session='/'autologin-session=hyprland'/g' /etc/lightdm/lightdm.conf
-
-
-useradd -m -G users,wheel,audio,video,autologin -s /bin/bash connor
+useradd -m -G users,wheel,audio,video -s /bin/bash connor
 printf " \n \n" | passwd
 printf " \n \n" | passwd connor
 echo -e "root ALL=(ALL:ALL) ALL\n%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n@includedir /etc/sudoers.d" > /etc/sudoers

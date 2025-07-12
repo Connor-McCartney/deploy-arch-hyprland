@@ -34,7 +34,7 @@ printf "[Autologin]\nUser=connor\nSession=hyprland.desktop\n" > /etc/sddm.conf.d
 systemctl enable sddm
 
 
-useradd -m -G users,wheel,audio,video -s /bin/bash connor
+useradd -m -G users,wheel,audio,video,input -s /bin/bash connor
 printf " \n \n" | passwd
 printf " \n \n" | passwd connor
 echo -e "root ALL=(ALL:ALL) ALL\n%wheel ALL=(ALL:ALL) NOPASSWD: ALL\n@includedir /etc/sudoers.d" > /etc/sudoers

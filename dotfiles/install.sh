@@ -4,6 +4,7 @@ cd /tmp
 git clone https://github.com/Connor-McCartney/deploy-arch-hyprland
 
 mv /tmp/deploy-arch-hyprland/dotfiles/.autostart.sh /home/connor
+chmod +x /home/connor/.autostart.sh
 
 mv /tmp/deploy-arch-hyprland/dotfiles/.config/hypr /home/connor/.config
 mv /tmp/deploy-arch-hyprland/dotfiles/.config/alacritty /home/connor/.config

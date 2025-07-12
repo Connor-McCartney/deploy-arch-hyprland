@@ -3,6 +3,8 @@ set -e
 cd /tmp
 git clone https://github.com/Connor-McCartney/deploy-arch-hyprland
 
+mv /tmp/deploy-arch-hyprland/dotfiles/.bashrc /home/connor
+
 mv /tmp/deploy-arch-hyprland/dotfiles/.autostart.sh /home/connor
 chmod +x /home/connor/.autostart.sh
 

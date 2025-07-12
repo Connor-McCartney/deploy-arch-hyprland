@@ -27,8 +27,8 @@ vim.keymap.set("v", ">", ">gv")
 -- Highlight yanked text
 local augroup = vim.api.nvim_create_augroup("UserConfig", {})
 vim.api.nvim_create_autocmd("TextYankPost", {
-group = augroup,
-callback = function()
-vim.highlight.on_yank()
-end,
+  group = augroup,
+  callback = function()
+    vim.highlight.on_yank()
+  end,
 })

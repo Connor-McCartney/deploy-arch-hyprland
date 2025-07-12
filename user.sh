@@ -22,6 +22,8 @@ paru -S --noconfirm gvfs usbutils
 
 
 
+# LSPs
+paru -S --noconfirm clang gopls basedpyright-bin lua-language-server asm-lsp rust-analyzer # rust gets installed as a dependancy
 
 
 rm /home/connor/user.sh

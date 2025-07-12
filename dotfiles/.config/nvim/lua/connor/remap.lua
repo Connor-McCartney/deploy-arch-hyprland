@@ -19,3 +19,16 @@ vim.keymap.set({"n", "v", "i"}, "<D-`>", "<Esc>:w<CR>")
 
 -- quickclose :wq alternative (windows a)
 vim.keymap.set({"n", "v", "i"}, "<D-a>", "<Esc>:wq<CR>")
+
+-- Better indenting in visual mode
+vim.keymap.set("v", "<", "<gv")
+vim.keymap.set("v", ">", ">gv")
+
+-- Highlight yanked text
+local augroup = vim.api.nvim_create_augroup("UserConfig", {})
+vim.api.nvim_create_autocmd("TextYankPost", {
+group = augroup,
+callback = function()
+vim.highlight.on_yank()
+end,
+})

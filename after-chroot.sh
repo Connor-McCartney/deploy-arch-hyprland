@@ -10,6 +10,7 @@ echo "arch" > /etc/hostname
 pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland waybar wl-clipboard
 pacman -S --noconfirm networkmanager neovim sudo base-devel os-prober grub vlc htop git wget ripgrep fzf bat fd kitty alacritty thunar
 systemctl enable NetworkManager
+pacman -S --noconfirm pulseaudio pavucontrol
 
 # non-LUKS
 #printf "GRUB_TIMEOUT=1\nGRUB_DISTRIBUTOR=\"Arch\"\nGRUB_CMDLINE_LINUX=\"loglevel=1 nowatchdog nvme_load=YES fsck.mode=skip modprobe.blacklist=iTCO_wdt\"\n" > /etc/default/grub

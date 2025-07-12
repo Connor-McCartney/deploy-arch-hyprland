@@ -2,5 +2,6 @@
 size = 20.0
 
 [colors.primary]
-background = "0x1e1e2e"  
-foreground = "0xd0d0d0"  # Light gray text
+#background = "0x1e1e2e"  # dark grey
+background = "0x292d3e" # light grey
+foreground = "0xd0d0d0"  # Light grey text

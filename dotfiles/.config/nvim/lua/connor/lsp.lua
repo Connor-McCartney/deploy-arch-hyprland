@@ -4,6 +4,7 @@
 --gD declaration
 --gd definition
 vim.api.nvim_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<F3>', '<cmd>lua vim.diagnostic.open_float({border = "rounded"})<cr>', {noremap = true, silent = true}) -- shows errors/warnings
 
 vim.lsp.enable({
     "lua_ls",

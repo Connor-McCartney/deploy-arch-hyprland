@@ -5,10 +5,9 @@
 
 sudo ydotool key 125:0 # windows up
 sudo ydotool key 1:0 # esc up
-sudo ydotool type ':w'
 sudo ydotool key 1:1 # esc down
 sudo ydotool key 1:0 # esc up
-sudo ydotool type '\n'
+sudo ydotool type ':w\n'
 
 sudo ydotool key 125:1 15:1 125:0 15:0 # switch (win-tab)
 

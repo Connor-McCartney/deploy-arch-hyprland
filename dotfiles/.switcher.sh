@@ -2,6 +2,7 @@
 # sudo ydotool key 29:1 56:1 59:1 59:0 56:0 29:0
 # sudo ydotool type 'echo Hey guys. This is Austin.'
 
+hyprctl dispatch layoutmsg focusmaster
 
 sudo ydotool key 125:0 # windows up
 sudo ydotool key 1:0 # esc up

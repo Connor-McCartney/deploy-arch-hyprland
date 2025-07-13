@@ -27,7 +27,7 @@ return {
     -- See :h blink-cmp-config-keymap for defining your own keymap
     keymap = {
         ['<C-space>'] = { 'show', 'show_documentation', 'hide_documentation' },
-        ['<Tab>'] = { 'select_and_accept' },
+        ['<Tab>'] = { 'select_and_accept', 'fallback' },
         ['<C-p>'] = { 'select_prev', 'fallback_to_mappings' },
         ['<C-o>'] = { 'select_next', 'fallback_to_mappings' },
         ['<C-k>'] = { 'scroll_documentation_up', 'fallback' },

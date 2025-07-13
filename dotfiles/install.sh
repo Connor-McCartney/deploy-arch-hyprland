@@ -6,6 +6,7 @@ git clone https://github.com/Connor-McCartney/deploy-arch-hyprland
 mv /tmp/deploy-arch-hyprland/dotfiles/.bashrc /home/connor
 mv /tmp/deploy-arch-dwm/dotfiles/.fdignore /home/connor
 mv /tmp/deploy-arch-dwm/dotfiles/.wallpapers /home/connor
+mv /tmp/deploy-arch-hyprland/dotfiles/.switcher.sh /home/connor
 
 
 mv /tmp/deploy-arch-hyprland/dotfiles/.autostart.sh /home/connor

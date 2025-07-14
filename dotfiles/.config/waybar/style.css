@@ -8,10 +8,12 @@
 
 /* -----------------------------------------------------------------------------
  * Keyframes
+ @define-color PURPLE #8A00C4;
+ @define-color PURPLE #b300ff;
  * -------------------------------------------------------------------------- */
 
- @define-color PINK #FF4DFF;
-@define-color PURPLE #8A00C4;
+@define-color PINK #FF4DFF;
+@define-color PURPLE #930ffc;
 
 
 @keyframes blink-warning {

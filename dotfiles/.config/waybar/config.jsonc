@@ -1,19 +1,23 @@
 {
+
 	"layer": "top",
 	"position": "top",
-        //"modules-left": [
-		//"hyprland/workspaces"
-        //	],
+    "modules-left": [
+        "memory",
+        "cpu",
+        "temperature",
+        "network",
+    ],
 	"modules-center": [
 		"hyprland/workspaces"
-		//"custom/music"
 	],
 	"modules-right": [
-		//"cava",
 		"pulseaudio",
 		"battery",
-		"clock"
+		"clock#date",
+		"clock#time"
 	],
+
 	"hyprland/workspaces": {
 		//"on-click": "activate",
 		//"on-scroll-up": "hyprctl dispatch workspace e-1",
@@ -22,106 +26,85 @@
 		"all-outputs": true,
 		"format-icons": {
 			"default": "",
-			"empty": "",
+			//"empty": "",
 		},
 	},
+
 	"tray": {
 		"icon-size": 21,
 		"spacing": 10
 	},
-	"custom/music": {
-		"format": " {}",
-		"escape": true,
-		"interval": 5,
-		"tooltip": false,
-		"exec": "playerctl metadata --format='{{ title }}'",
-		"on-click": "playerctl play-pause",
-		"max-length": 50
-	},
-	"cava": {
-		"cava_config": "$HOME/.config/cava/config",
-		"framerate": 60,
-		"bars": 14,
-		"bar_delimiter": 0,
-		"format-icons": [
-			"▁",
-			"▂",
-			"▃",
-			"▄",
-			"▅",
-			"▆",
-			"▇",
-			"█"
-		],
-		"actions": {
-			"on-click-right": "mode"
-		}
-	},
-	"clock": {
-		"timezone": "Asia/Tehran",
-		"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
-		"format-alt": " {:%d/%m/%Y}",
-		"format": " {:%H:%M}"
-	},
-	"backlight": {
-		"device": "nvidia_0",
-		"format": "{icon}",
-		"on-scroll-up": "brightnessctl s '+10%'",
-		"on-scroll-down": "brightnessctl s '10%-'",
-		"on-click": "((( $(brightnessctl g) == 100 )) && brightnessctl s '0') || (brightnessctl s '+10%')",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			"",
-			""
-		]
-	},
-	"battery": {
-		"states": {
-			"warning": 30,
-			"critical": 15
-		},
-		"format": "{icon}",
-		"format-charging": "󰂄",
-		"format-plugged": "",
-		"format-alt": "{icon}",
-		"format-icons": [
-			"",
-			"",
-			"",
-			"",
-			""
-		]
-	},
+
+    "cpu": {
+        "interval": 1,
+        "format": " CPU  {usage}%  ", 
+        "states": {
+          "warning": 70,
+          "critical": 90
+        }
+
+    },
+
+    "memory": {
+        "interval": 1,
+        "format": " RAM {}%  ", 
+        "states": {
+            "warning": 70,
+            "critical": 90
+        }
+    },
+
+    "temperature": {
+      "critical-threshold": 80,
+      "interval": 5,
+      "format": " {temperatureC}°C ",
+    },
+
+    "network": {
+      "interval": 1,
+      "format": "     {signalStrength}%  {bandwidthDownBits} ",
+    },
+
+    "battery": {
+        "interval": 3,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format":             " {icon}   {capacity}% + ",
+        "format-full":        " {icon}   {capacity}% ",
+        "format-discharging": " {icon}   {capacity}% - ",
+        "format-icons": [
+            "", // Icon: battery-full
+            "", // Icon: battery-three-quarters
+            "", // Icon: battery-half
+            "", // Icon: battery-quarter
+            ""  // Icon: battery-empty
+        ],
+    },
+
+    "clock#time": {
+        "interval": 1,
+        "format": " {:%I:%M:%S %p} ",
+        "tooltip": false
+    },
+
+    "clock#date": {
+      "interval": 10,
+      "format": " {:%a, %b %d} ",
+    },
+
 	"pulseaudio": {
 		// "scroll-step": 1, // %, can be a float
-		"format": "{icon} {volume}%",
-		"format-muted": "",
+		"format": " {icon} {volume}% ",
+		"format-muted": "     {volume}% ",
 		"format-icons": {
 			"default": [
-				"",
-				"",
-				" "
+				" ",
+				"  ",
+				"   "
 			]
 		},
 		"on-click": "pavucontrol"
 	},
-
-	"custom/lock": {
-		"tooltip": false,
-		"on-click": "hyprlock &",
-		"format": ""
-	},
-
-	"custom/power": {
-		"tooltip": false,
-		"on-click": "wlogout &",
-		"format": "⏻"
-	},
-
 }

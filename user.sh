@@ -19,7 +19,9 @@ paru -S --noconfirm  noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack-nerd tt
 paru -S --noconfirm brave-bin discord obsidian # sagemath google-chrome
 paru -S --noconfirm gvfs usbutils
 
-
+# wireshark needs minor workaround https://askubuntu.com/questions/968948/how-to-run-wireshark-on-ubuntu-17-10
+paru -S --noconfirm xorg-xhost wireshark-qt
+xhost +si:localuser:root
 
 # LSPs
 paru -S --noconfirm clang basedpyright-bin lua-language-server asm-lsp rust-analyzer # rust gets installed as a dependancy

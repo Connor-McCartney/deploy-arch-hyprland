@@ -27,4 +27,9 @@ xhost +si:localuser:root
 paru -S --noconfirm clang basedpyright-bin lua-language-server asm-lsp rust-analyzer # rust gets installed as a dependancy
 
 
+paru -S --noconfirm arc-gtk-theme # pair with env = GTK_THEME,Arc-Dark    in hyprland.conf to set
+paru -S --noconfirm papirus-folders
+papirus-folders -C magenta
+#paru -S --noconfirm kvantum nwg-look # change gtk themes by running nwg-look
+
 rm /home/connor/user.sh

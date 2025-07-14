@@ -260,11 +260,11 @@
 
 /* Styling for each individual workspace button */
 #workspaces button{
-  font-size: 15px;
+  font-size: 16px;
   color: @PINK;
   border: none;
-  /*padding: 2px 6px;*/
-  margin: 1px;
+  padding-right: 2px;
+  margin: 0px;
   min-width: 20px;
   min-height: 0px;
 }
@@ -276,7 +276,6 @@
 /* Styling for the active workspace */
 #workspaces button.active{
   box-shadow: 0 3px 0 0 @PINK;
-
 }
 
 /* Blinking animation */

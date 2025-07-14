@@ -249,9 +249,8 @@
   background-color: rgba(41, 45, 62, 0.5);
   border-radius: 8px; /* Slightly less rounded corners for the outer container */
 
-  padding: 4px; /* Adjusted padding inside the outer rounded square */
-  margin: 4px 5px; /* Slightly smaller margin around the whole module */
-  margin-left: 15px; /* Add some left margin */
+  padding: 5px; /* Adjusted padding inside the outer rounded square */
+  margin: 5px; /* Slightly smaller margin around the whole module */
 
   border: 2px;
   border-style: solid;
@@ -275,7 +274,7 @@
 
 /* Styling for the active workspace */
 #workspaces button.active{
-  box-shadow: 0 3px 0 0 @PINK;
+  box-shadow: 0 2px 0 0 @PINK;
 }
 
 /* Blinking animation */

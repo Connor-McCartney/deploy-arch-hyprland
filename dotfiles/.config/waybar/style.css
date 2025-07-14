@@ -1,100 +1,285 @@
-* {
-    border: none;
-    border-radius: 0;
-    font-family: Roboto, Helvetica, Arial, sans-serif;
-    font-size: 13px;
-}
+/* =============================================================================
+ *
+ * Waybar configuration
+ *
+ * Configuration reference: https://github.com/Alexays/Waybar/wiki/Configuration
+ *
+ * =========================================================================== */
 
-window {
-    background: rgba(43, 48, 59, 0.5);
-    border-bottom: 3px solid rgba(100, 114, 125, 0.5);
-    color: white;
-}
+/* -----------------------------------------------------------------------------
+ * Keyframes
+ * -------------------------------------------------------------------------- */
 
-#workspaces button {
-    padding: 0 5px;
-    color: white;
-    border-bottom: 3px solid transparent;
-}
+ @define-color PINK #FF4DFF;
+@define-color PURPLE #8A00C4;
 
-#workspaces button.icon label {
-    font-size: 10px;
-}
 
-#workspaces button.focused {
-    background: #444444;
-    border-bottom: 3px solid white;
-}
+@keyframes blink-warning {
+    70% {
+        color: white;
+    }
 
-#workspaces button.active{
-    background: #111111;
-    border-bottom: 3px solid white;
-}
-
-#clock, #battery, #cpu, #memory, #network, #pulseaudio, #custom-spotify {
-    padding: 0 10px;
-    margin: 0 5px;
-}
-
-#clock {
-    background-color: #64727D;
-}
-
-#battery {
-    background-color: #ffffff;
-    color: black;
-}
-
-#battery.charging {
-    color: white;
-    background-color: #26A65B;
-}
-
-@keyframes blink {
     to {
-        background-color: #ffffff;
-        color: black;
+        color: orange;
     }
 }
 
+@keyframes blink-critical {
+    70% {
+      color: white;
+    }
+
+    to {
+        color: red;
+    }
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Base styles
+ * -------------------------------------------------------------------------- */
+
+
+/* Reset all styles */
+* {
+    border: none;
+    border-radius: 0;
+
+    min-height: 20px;
+    margin: 0;
+    padding: 0;
+}
+
+/* The whole bar */
+#waybar {
+  /*background-color: transparent;  RGBA for #323232 with 70% opacity */
+  background-color: #1a1b26;
+  color: @PINK;
+  font-size: 13px;
+}
+/* Each module */
+#power-profiles-daemon
+#battery,
+#clock,
+#cpu,
+#memory,
+#mode,
+#network,
+#pulseaudio,
+#temperature,
+#tray {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Module styles
+ * -------------------------------------------------------------------------- */
+
+#battery {
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background-color: rgba(46, 52, 64, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 10px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
+}
+
 #battery.warning {
-    background: #f53c3c;
-    color: white;
-    animation-name: blink;
-    animation-duration: 0.5s;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-    animation-direction: alternate;
+    color: orange;
+}
+
+#battery.critical {
+    color: red;
+}
+
+#battery.warning.discharging {
+    animation-name: blink-warning;
+    animation-duration: 5s;
+}
+
+#battery.critical.discharging {
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#clock {
+    background-color: rgba(41, 45, 62, 0.5);
+    border-radius: 8px;
+    padding: 4px; /* Add some padding around the tray icons */
+    margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+    margin-right: 10px; /* Add some right margin to separate from other right-side modules */
+
+
+    border: 2px;
+    border-style: solid;
+    border-color: @PURPLE;
 }
 
 #cpu {
-    background: #2ecc71;
-    color: #000000;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
+}
+
+#cpu.warning {
+    color: orange;
+}
+
+#cpu.critical {
+    color: red;
 }
 
 #memory {
-    background: #9b59b6;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
+}
+
+#memory.warning {
+    color: orange;
+}
+
+#memory.critical {
+    color: red;
+    animation-name: blink-critical;
+    animation-duration: 2s;
+}
+
+#mode {
+    background: #64727D;
+    border-top: 2px solid white;
+    /* To compensate for the top border and still have vertical centering */
+    padding-bottom: 2px;
 }
 
 #network {
-    background: #2980b9;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
 }
 
 #network.disconnected {
-    background: #f53c3c;
+  color: orange;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
 }
 
 #pulseaudio {
-    background: #f1c40f;
-    color: black;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
 }
 
 #pulseaudio.muted {
-    background: #90b1b1;
-    color: #2a5c45;
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
 }
 
 #custom-spotify {
-    background: #66cc99;
-    color: #2a5c45;
+    color: rgb(102, 220, 105);
+}
+
+#temperature {
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px;
+  padding: 4px; /* Add some padding around the tray icons */
+  margin: 4px 5px; /* Add some margin for spacing from other modules and edges */
+  margin-right: 3px; /* Add some right margin to separate from other right-side modules */
+
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
+}
+
+#temperature.critical {
+    color: red;
+}
+
+/* Configuration for the whole workspaces module */
+#workspaces {
+  background-color: rgba(41, 45, 62, 0.5);
+  border-radius: 8px; /* Slightly less rounded corners for the outer container */
+
+  padding: 4px; /* Adjusted padding inside the outer rounded square */
+  margin: 4px 5px; /* Slightly smaller margin around the whole module */
+  margin-left: 15px; /* Add some left margin */
+
+  border: 2px;
+  border-style: solid;
+  border-color: @PURPLE;
+}
+
+/* Styling for each individual workspace button */
+#workspaces button{
+  font-size: 15px;
+  color: @PINK;
+  border: none;
+  /*padding: 2px 6px;*/
+  margin: 1px;
+  min-width: 20px;
+  min-height: 0px;
+}
+
+#workspaces button.empty {
+  color: @PURPLE;
+}
+
+/* Styling for the active workspace */
+#workspaces button.active{
+  box-shadow: 0 3px 0 0 @PINK;
+
+}
+
+/* Blinking animation */
+@keyframes blink {
+  0% { opacity: 1; }
+  50% { opacity: 0.2; }
+  100% { opacity: 1; }
 }

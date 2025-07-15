@@ -16,12 +16,21 @@ chmod +x install.sh
 ./install.sh
 
 paru -S --noconfirm  noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack-nerd ttf-comic-mono-git
-paru -S --noconfirm brave-bin discord obsidian # sagemath google-chrome
+paru -S --noconfirm brave-bin discord obsidian sagemath google-chrome
 paru -S --noconfirm gvfs usbutils
 
 # wireshark needs minor workaround https://askubuntu.com/questions/968948/how-to-run-wireshark-on-ubuntu-17-10
 paru -S --noconfirm xorg-xhost wireshark-qt
 xhost +si:localuser:root
+
+# python setup
+paru -S --noconfirm python-pip
+python -m venv /home/connor/.p
+/home/connor/.p/bin/python -m pip install --upgrade pip
+/home/connor/.p/bin/pip install pycryptodome gmpy2 pwntools
+
+# sage libs
+/usr/bin/sage --pip install pycryptodome pwntools --break-system-packages
 
 # LSPs
 paru -S --noconfirm clang basedpyright-bin lua-language-server asm-lsp rust-analyzer # rust gets installed as a dependancy
@@ -32,5 +41,9 @@ paru -S --noconfirm papirus-folders
 papirus-folders -C magenta
 gsettings set org.gnome.desktop.interface icon-theme "Papirus"
 #paru -S --noconfirm kvantum nwg-look # change gtk themes by running nwg-look
+
+
+# file previews 
+paru -S --noconfirm tumbler ffmpegthumbnailer libopenraw
 
 rm /home/connor/user.sh

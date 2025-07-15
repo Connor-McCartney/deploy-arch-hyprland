@@ -19,6 +19,9 @@ paru -S --noconfirm  noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack-nerd tt
 paru -S --noconfirm brave-bin discord obsidian sagemath google-chrome
 paru -S --noconfirm gvfs usbutils
 
+# just for audio effect ('play file.mp3')
+paru -S --noconfirm sox twolame libmad
+
 # wireshark needs minor workaround https://askubuntu.com/questions/968948/how-to-run-wireshark-on-ubuntu-17-10
 paru -S --noconfirm xorg-xhost wireshark-qt
 xhost +si:localuser:root

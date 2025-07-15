@@ -91,7 +91,7 @@
 
     "clock#date": {
       "interval": 10,
-      "format": " {:%a, %b %d} ",
+      "format": " {:%a,  %b %d} ",
     },
 
 	"pulseaudio": {

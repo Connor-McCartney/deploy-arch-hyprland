@@ -23,8 +23,8 @@ paru -S --noconfirm gvfs usbutils
 paru -S --noconfirm sox twolame libmad
 
 # wireshark needs minor workaround https://askubuntu.com/questions/968948/how-to-run-wireshark-on-ubuntu-17-10
-paru -S --noconfirm xorg-xhost wireshark-qt
-xhost +si:localuser:root
+paru -S --noconfirm xorg-xhost
+# xhost +si:localuser:root # can't run in chroot, run later
 
 # python setup
 paru -S --noconfirm python-pip

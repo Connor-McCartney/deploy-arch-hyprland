@@ -4,6 +4,7 @@ return {
 
   settings = {
     python = {
+      pythonPath = "/home/connor/.p/bin/python",
       analysis = {
         typeCheckingMode = "standard"
       }

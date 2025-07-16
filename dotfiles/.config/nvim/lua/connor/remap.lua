@@ -13,6 +13,8 @@ vim.cmd("set clipboard=unnamed,unnamedplus")
 vim.keymap.set("n", "dd", "\"_dd")
 vim.keymap.set({"n", "v"}, "d", "\"_d")
 vim.keymap.set("n", "x", "\"_x")
+vim.keymap.set("n", "s", "\"_s")
+
 
 -- quicksave :w alternative (windows `)
 vim.keymap.set({"n", "v", "i"}, "<D-`>", "<Esc>:w<CR>")

@@ -1,3 +1,4 @@
+umount /dev/*
 vgchange -an
 cryptsetup luksClose cryptlvm
 swapoff /dev/*

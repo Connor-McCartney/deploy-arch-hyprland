@@ -38,7 +38,15 @@ return {
     },
 
     -- (Default) Only show the documentation popup when manually triggered
-    completion = { documentation = { auto_show = true} },
+    completion = {
+        documentation = { auto_show = true},
+        accept = {
+          auto_brackets = {
+            enabled = true,
+            default_brackets = { '(', '' },
+          },
+        },
+    },
 
   },
   opts_extend = { "sources.default" }

@@ -17,6 +17,7 @@ chmod +x install.sh
 
 paru -S --noconfirm  noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack-nerd ttf-comic-mono-git
 paru -S --noconfirm brave-bin discord obsidian sagemath google-chrome
+paru -S --noconfirm obs-studio wlrobs libmpeg2
 paru -S --noconfirm gvfs usbutils
 
 # just for audio effect ('play file.mp3')

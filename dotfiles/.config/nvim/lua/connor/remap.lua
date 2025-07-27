@@ -34,3 +34,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     vim.highlight.on_yank()
   end,
 })
+
+-- alt-a to highlight everything
+vim.keymap.set("n", "<A-a>", "ggVG")

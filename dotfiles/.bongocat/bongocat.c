@@ -1,3 +1,6 @@
+// someone else actually used my code for their own project: https://github.com/saatvik333/wayland-bongocat
+
+
 #include <stdio.h>
 #include <linux/input.h>
 #include <string.h>

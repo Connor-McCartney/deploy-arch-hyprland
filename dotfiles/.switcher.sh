@@ -13,7 +13,7 @@ sudo ydotool key 1:1 # esc down
 sudo ydotool key 1:0 # esc up
 #sleep 0.1
 sudo ydotool type ':w\n'
-#sleep 0.1
+sleep 0.1
 
 #sudo ydotool key 125:1 15:1 125:0 15:0 # switch (win-tab)
 hyprctl dispatch layoutmsg focusmaster slave

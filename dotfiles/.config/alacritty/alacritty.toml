@@ -1,6 +1,10 @@
 [font]
 size = 20.0
 
+[font.normal]
+family = "Comic Mono"
+style = "Normal"
+
 [colors.primary]
 #background = "0x1e1e2e"  # dark grey
 background = "0x292d3e" # light grey

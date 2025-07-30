@@ -40,6 +40,8 @@ c() {
   cd "$1" && ls
 }
 
+alias ..="cd .."
+
 fzf() {
     command fzf --bind "ctrl-o:down,tab:accept" --preview="bat --color=always {}"
 }

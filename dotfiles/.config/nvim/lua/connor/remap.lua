@@ -35,5 +35,5 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   end,
 })
 
--- alt-a to highlight everything
-vim.keymap.set("n", "<A-a>", "ggVG")
+-- alt-y to copy entire file
+vim.keymap.set("n", "<A-y>", "ggVGy")

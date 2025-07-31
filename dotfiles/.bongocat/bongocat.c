@@ -1,6 +1,3 @@
-// someone else actually used my code for their own project: https://github.com/saatvik333/wayland-bongocat
-
-
 #include <stdio.h>
 #include <linux/input.h>
 #include <string.h>
@@ -88,7 +85,7 @@ int anim2_width[NUM_FRAMES2], anim2_height[NUM_FRAMES2];
 int anim2_index = 3;
 pthread_mutex_t anim2_lock = PTHREAD_MUTEX_INITIALIZER;
 
-bool background_drawn = false;
+//bool background_drawn = false;
 
 int create_shm(int size) {
     char name[] = "/bar-shm-XXXXXX";
@@ -119,6 +116,11 @@ void blit_image(uint8_t* dest, int dest_w, int dest_h,
             if (dx < 0 || dx >= dest_w) continue;
             int di = (dy * dest_w + dx) * 4;
             int si = (y * src_w + x) * 4;
+            dest[di+0] = (uint8_t)(src[si+2]);
+            dest[di+1] = (uint8_t)(src[si+1]);
+            dest[di+2] = (uint8_t)(src[si+0]);
+            dest[di+3] = (uint8_t)(src[si+3]);
+            /*
             float a = src[si+3] / 255.0f;
             if (dy < 46) {
                 dest[di+0] = (uint8_t)(38 * (1-a) + src[si+2] * a);
@@ -128,10 +130,12 @@ void blit_image(uint8_t* dest, int dest_w, int dest_h,
             } else {
                 memcpy(&dest[di], &src[si], 4);
             }
+            */
         }
     }
 }
 
+/*
 void draw_rect(uint8_t* dest, int width, int height, int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     for (int j = y; j < y + h; j++)
         for (int i = x; i < x + w; i++) {
@@ -143,18 +147,21 @@ void draw_rect(uint8_t* dest, int width, int height, int x, int y, int w, int h,
             dest[idx+3] = a;
         }
 }
+*/
 
 void draw_bar() {
     if (!configured) return;
+    /*
     if (!background_drawn) {
         draw_rect(pixels, screen_width, bar_height, 0, 0, screen_width, 46, 26, 27, 38, 255);
         background_drawn = true;
     }
+    */
     pthread_mutex_lock(&anim1_lock);
-    blit_image(pixels, screen_width, bar_height, anim1_imgs[anim1_index], anim1_width[anim1_index], anim1_height[anim1_index], screen_width/2+150, -2);
+    blit_image(pixels, screen_width, bar_height, anim1_imgs[anim1_index], anim1_width[anim1_index], anim1_height[anim1_index], screen_width/2+150, -4);
     pthread_mutex_unlock(&anim1_lock);
     pthread_mutex_lock(&anim2_lock);
-    blit_image(pixels, screen_width, bar_height, anim2_imgs[anim2_index], anim2_width[anim2_index], anim2_height[anim2_index], screen_width/2-210, -5);
+    blit_image(pixels, screen_width, bar_height, anim2_imgs[anim2_index], anim2_width[anim2_index], anim2_height[anim2_index], screen_width/2-210, -8);
     pthread_mutex_unlock(&anim2_lock);
 
     wl_surface_attach(surface, buffer, 0, 0);
@@ -250,11 +257,11 @@ int main() {
 
     surface = wl_compositor_create_surface(compositor);
     layer_surface = zwlr_layer_shell_v1_get_layer_surface(layer_shell, surface, NULL,
-        ZWLR_LAYER_SHELL_V1_LAYER_BACKGROUND, "my-bar");
+        ZWLR_LAYER_SHELL_V1_LAYER_OVERLAY, "my-bar");
     zwlr_layer_surface_v1_set_anchor(layer_surface, ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP |
         ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT | ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT);
     zwlr_layer_surface_v1_set_size(layer_surface, 0, bar_height);
-    zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, 1);
+    zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, -1);
     zwlr_layer_surface_v1_add_listener(layer_surface, &layer_listener, NULL);
     wl_surface_commit(surface);
 

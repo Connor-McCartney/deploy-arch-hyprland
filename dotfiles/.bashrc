@@ -40,8 +40,6 @@ c() {
   cd "$1" && ls
 }
 
-alias ..="cd .."
-
 fzf() {
     command fzf --bind "ctrl-o:down,tab:accept" --preview="bat --color=always {}"
 }
@@ -50,8 +48,8 @@ V() {
     cd
     export FZF_DEFAULT_COMMAND="fd --type f --strip-cwd-prefix --hidden --follow --exclude .git"
     d=$(fzf)
-    nvim "$HOME/${d}";
     cd "${d%/*}" # nice trick, ${var%SubStr*}  # drops substring from last occurrence of `SubStr` to end of string
+    nvim "$HOME/${d}";
 }
 
 C() {
@@ -59,4 +57,6 @@ C() {
     export FZF_DEFAULT_COMMAND="fd --type d --strip-cwd-prefix --hidden --follow --exclude .git"
     cd $(/bin/fzf --bind "ctrl-o:down,tab:accept")
 }
+
+
 [[ "$PWD" == "/home/connor" ]] && cd t

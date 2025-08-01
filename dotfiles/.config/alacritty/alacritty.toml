@@ -9,3 +9,7 @@ style = "Normal"
 #background = "0x1e1e2e"  # dark grey
 background = "0x292d3e" # light grey
 foreground = "0xd0d0d0"  # Light grey text
+
+[window]
+opacity = 0.6
+#opacity = 1

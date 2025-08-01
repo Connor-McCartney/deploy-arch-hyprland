@@ -7,7 +7,7 @@ locale-gen
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 echo "arch" > /etc/hostname
 
-pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland waybar hyprpaper wl-clipboard wofi grim
+pacman -S --noconfirm hyprland xdg-desktop-portal-hyprland waybar hyprpaper swww wl-clipboard wofi grim
 pacman -S --noconfirm networkmanager wireshark-qt neovim sudo base-devel os-prober grub vlc htop git wget ripgrep fzf bat fd kitty alacritty thunar ydotool
 systemctl enable NetworkManager
 pacman -S --noconfirm pulseaudio pavucontrol

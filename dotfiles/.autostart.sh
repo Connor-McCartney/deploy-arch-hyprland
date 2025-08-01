@@ -1,7 +1,7 @@
 # wget https://www.desktophut.com/files/SjKfUeLTflOpVjR_Purple%20Eyes%20Live%20Wallpaper_5_103713.mp4
 # ffmpeg -i 'SjKfUeLTflOpVjR_Purple Eyes Live Wallpaper_5_103713.mp4' -vf "fps=30," purple_eyes.gif
 swww-daemon &
-swww img ~/.wallpapers/purple_eyes.gif --transition-step 255 --transition-fps 255 --transition-type wipe
+swww img ~/.wallpapers/purple_eyes.gif --transition-duration=1 --transition-type wipe
 
 hyprctl dispatch workspace 9
 hyprctl dispatch workspace 8

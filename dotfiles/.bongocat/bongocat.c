@@ -257,12 +257,19 @@ int main() {
 
     surface = wl_compositor_create_surface(compositor);
     layer_surface = zwlr_layer_shell_v1_get_layer_surface(layer_shell, surface, NULL,
-        ZWLR_LAYER_SHELL_V1_LAYER_OVERLAY, "my-bar");
+        ZWLR_LAYER_SHELL_V1_LAYER_TOP, "my-bar");
     zwlr_layer_surface_v1_set_anchor(layer_surface, ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP |
         ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT | ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT);
     zwlr_layer_surface_v1_set_size(layer_surface, 0, bar_height);
     zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, -1);
     zwlr_layer_surface_v1_add_listener(layer_surface, &layer_listener, NULL);
+
+    // Create an empty input region to make the surface click-through
+    struct wl_region *input_region = wl_compositor_create_region(compositor);
+    // Don't add any rectangles to the region, keeping it empty
+    wl_surface_set_input_region(surface, input_region);
+    wl_region_destroy(input_region);
+
     wl_surface_commit(surface);
 
     int size = screen_width * bar_height * 4;

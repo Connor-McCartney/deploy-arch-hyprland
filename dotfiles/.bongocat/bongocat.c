@@ -249,6 +249,7 @@ void registry_remove(void* _, struct wl_registry* r, uint32_t name) {}
 struct wl_registry_listener reg_listener = {.global=registry_global, .global_remove=registry_remove};
 
 int main() {
+    usleep(2000000); // let waybar spawn first
     screen_width = get_screen_width();
     display = wl_display_connect(NULL);
     struct wl_registry* registry = wl_display_get_registry(display);
@@ -264,6 +265,8 @@ int main() {
     zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, -1);
     zwlr_layer_surface_v1_add_listener(layer_surface, &layer_listener, NULL);
 
+
+    //zwlr_layer_surface_v1_set_keyboard_interactivity(layer_surface, ZWLR_LAYER_SURFACE_V1_KEYBOARD_INTERACTIVITY_NONE);
     // Create an empty input region to make the surface click-through
     struct wl_region *input_region = wl_compositor_create_region(compositor);
     // Don't add any rectangles to the region, keeping it empty

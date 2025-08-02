@@ -19,6 +19,7 @@ paru -S --noconfirm  noto-fonts noto-fonts-cjk noto-fonts-emoji ttf-hack-nerd tt
 paru -S --noconfirm brave-bin discord obsidian sagemath google-chrome
 paru -S --noconfirm obs-studio wlrobs libmpeg2 vlc-plugins-all
 paru -S --noconfirm gvfs usbutils
+paru -S --noconfirm file-roller thunar-archive-plugin
 
 # just for audio effect ('play file.mp3')
 paru -S --noconfirm sox twolame libmad

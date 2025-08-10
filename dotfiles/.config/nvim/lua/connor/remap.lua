@@ -37,3 +37,8 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- alt-y to copy entire file
 vim.keymap.set("n", "<A-y>", "ggVGy")
+
+
+-- center cursor
+vim.keymap.set("n", "<A-w>", ':execute "normal! 0" . (col("$") / 2) . "|"<CR>     :echo ""<CR>')
+

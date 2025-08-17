@@ -18,10 +18,9 @@ vim.keymap.set("n", "s", "\"_s")
 
 -- quicksave :w alternative (windows `)
 vim.keymap.set({"n", "v", "i"}, "<D-`>", "<Esc>:w<CR>")
-vim.keymap.set({"n", "v", "i"}, "`", "<Esc>:w<CR>") -- windows https://stackoverflow.com/questions/327415/can-windows-key-be-mapped-in-vim
 
 -- quickclose :wq alternative (windows a)
-vim.keymap.set({"n", "v", "i"}, "<D-a>", "<Esc>:wq<CR>") -- won't work on windows..
+vim.keymap.set({"n", "v", "i"}, "<D-a>", "<Esc>:wq<CR>")
 
 -- Better indenting in visual mode
 vim.keymap.set("v", "<", "<gv")

@@ -21,3 +21,10 @@ vim.cmd("nnoremap q: <nop>")
 
 -- https://www.reddit.com/r/neovim/comments/13585hy/trying_to_disable_autocomments_on_new_line_eg
 vim.cmd('autocmd BufEnter * set formatoptions-=cro')
+
+
+
+
+
+vim.g.neovide_opacity = 0.8
+vim.g.neovide_normal_opacity = 0.8

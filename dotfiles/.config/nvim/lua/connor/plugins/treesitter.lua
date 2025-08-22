@@ -14,6 +14,7 @@ return {
                 additional_vim_regex_highlighting = false,
             },
             ensure_installed = {
+                "odin",
                 "json",
                 "javascript",
                 "typescript",

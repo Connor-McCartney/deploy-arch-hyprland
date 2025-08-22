@@ -45,5 +45,4 @@ vim.keymap.set("n", "<A-w>", ':execute "normal! 0" . (col("$") / 2) . "|"<CR>   
 
 
 -- surround-nvim shortcuts
-vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'
-vim.keymap.set("n", "T", "wxbX", {remap=true}) -- delete any around
+vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'    

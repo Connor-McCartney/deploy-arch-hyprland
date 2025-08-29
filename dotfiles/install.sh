@@ -21,6 +21,6 @@ make install
 
 cd /home/connor/.wallpapers
 wget https://www.desktophut.com/files/SjKfUeLTflOpVjR_Purple%20Eyes%20Live%20Wallpaper_5_103713.mp4
-ffmpeg -i 'SjKfUeLTflOpVjR_Purple Eyes Live Wallpaper_5_103713.mp4' -vf "fps=30," purple_eyes.gif
+ffmpeg -nostdin -i 'SjKfUeLTflOpVjR_Purple Eyes Live Wallpaper_5_103713.mp4' -vf "fps=30," purple_eyes.gif
 
 rm -rf /tmp/deploy-arch-hyprland

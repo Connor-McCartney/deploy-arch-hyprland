@@ -35,7 +35,8 @@ python -m venv /home/connor/.p
 /home/connor/.p/bin/pip install pycryptodome gmpy2 pwntools
 
 # sage libs
-/usr/bin/sage --pip install pycryptodome pwntools --break-system-packages
+#/usr/bin/sage --pip install pycryptodome pwntools --break-system-packages # depracated since 10.7 ?!
+paru -S --noconfirm python-pycryptodome python-pwntools
 
 # LSPs
 paru -S --noconfirm clang basedpyright-bin lua-language-server asm-lsp rust-analyzer # rust gets installed as a dependancy

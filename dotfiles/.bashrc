@@ -41,19 +41,22 @@ c() {
 }
 
 fzf() {
+    export FZF_DEFAULT_OPTS="--color=bg+:#930ffc"
     command fzf --bind "ctrl-o:down,tab:accept" --preview="bat --color=always {}"
 }
 
-V() {
+vv() {
     cd
+    export FZF_DEFAULT_OPTS="--color=bg+:#930ffc"
     export FZF_DEFAULT_COMMAND="fd --type f --strip-cwd-prefix --hidden --follow --exclude .git"
     d=$(fzf)
     cd "${d%/*}" # nice trick, ${var%SubStr*}  # drops substring from last occurrence of `SubStr` to end of string
     nvim "$HOME/${d}";
 }
 
-C() {
+cc() {
     cd
+    export FZF_DEFAULT_OPTS="--color=bg+:#930ffc"
     export FZF_DEFAULT_COMMAND="fd --type d --strip-cwd-prefix --hidden --follow --exclude .git"
     cd $(/bin/fzf --bind "ctrl-o:down,tab:accept")
 }

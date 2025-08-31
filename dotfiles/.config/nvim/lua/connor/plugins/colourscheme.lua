@@ -33,6 +33,18 @@ return {
     lazy = false,
     priority = 1000,
     config = function()
-        vim.cmd("colorscheme sonokai")
+    vim.cmd("colorscheme sonokai")
+
+    -- defer overrides so Sonokai doesn't overwrite them
+    vim.schedule(function()
+      --vim.api.nvim_set_hl(0, "CursorLine",   { bg = "#f7a3f1", fg = "None" })
+      --vim.api.nvim_set_hl(0, "StatusLine",   { bg = "#ff00ff", fg = "#ffffff" })
+      --vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#ffffff", fg = "#cccccc" })
+      --vim.api.nvim_set_hl(0, "PmenuSel",     { bg = "#0000ff", fg = "#ffffff" })
+    end)
+
     end,
 }
+
+
+

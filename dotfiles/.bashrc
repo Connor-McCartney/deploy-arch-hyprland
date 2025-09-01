@@ -9,8 +9,8 @@ alias n="nasm -f elf64 x.asm && ld x.o && ./a.out"
 alias q="qemu-system-x86_64"
 alias t="cd ~/t"
 alias dt="rm -rf ~/t/*"
-alias sv=nvim
-alias vv="sudo nvim"
+alias v=nvim
+alias sv="sudo nvim"
 alias ls="ls --color=auto"
 alias l=ls
 alias la="l -lash"

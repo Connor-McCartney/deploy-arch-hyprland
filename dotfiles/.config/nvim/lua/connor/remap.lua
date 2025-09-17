@@ -16,7 +16,6 @@ vim.keymap.set("n", "x", "\"_x")
 vim.keymap.set("n", "X", "\"_X")
 vim.keymap.set("n", "s", "\"_s")
 
-
 -- quicksave :w alternative (windows `)
 vim.keymap.set({"n", "v", "i"}, "<D-`>", "<Esc>:w<CR>")
 
@@ -39,10 +38,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- alt-y to copy entire file
 vim.keymap.set("n", "<A-y>", "ggVGy")
 
-
 -- center cursor
 vim.keymap.set("n", "<A-w>", ':execute "normal! 0" . (col("$") / 2) . "|"<CR>     :echo ""<CR>')
 
-
 -- surround-nvim shortcuts
-vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'    
+vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'
+
+-- I keep accidentally hitting 'menu' physical key, just disable it
+vim.keymap.set({"n", "i", "v"}, "", "<nop>", { noremap = true })

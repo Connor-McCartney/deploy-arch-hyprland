@@ -1,21 +1,48 @@
+#include <stdio.h>
+#include <linux/input.h>
+#include <string.h>
+#include <fcntl.h>
+#include <unistd.h>
+
+
+
+int *any_key_pressed;
+void capture(char* filename)
+{
+    int fd = open(filename, O_RDONLY);
+    struct input_event ev[64];
+    int i, rd;
+    while (1) {
+        rd = read(fd, ev, sizeof(ev));
+        for (i = 0; i < rd / sizeof(struct input_event); i++) {
+            if (ev[i].value == 1) {
+                *any_key_pressed = 1;
+            }
+        }
+        usleep(10000);
+    }
+}
+
 #define _POSIX_C_SOURCE 200809L
 #include <wayland-client.h>
 #include <stdbool.h>
+#include "zwlr-layer-shell-v1-client-protocol.h"
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/mman.h>
+#include <sys/stat.h>
 #include <pthread.h>
-#include <time.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <linux/input-event-codes.h>
+#include <sys/time.h>
 
-#include "xdg-shell-client-protocol.h"
-#include "zwlr-layer-shell-v1-client-protocol.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
-// ------------------- Globals (Wayland) -------------------
+// Globals
+bool configured = false;
 struct wl_display* display;
 struct wl_compositor* compositor;
 struct wl_shm* shm;
@@ -25,261 +52,287 @@ struct wl_buffer* buffer;
 struct zwlr_layer_surface_v1* layer_surface;
 uint8_t* pixels;
 
-// Input
-struct wl_seat* seat;
-struct wl_pointer* pointer;
-int mouse_x = -1, mouse_y = -1;
-
-// Screen
 int screen_width = 1920;
-int screen_height = 1080;
+int bar_height = 60;
 
-// Fire region
-int fire_x = 500;
-int fire_y = 500;
-int fire_width = 200;
-int fire_height = 500;
+#define NUM_FRAMES1 3
+#define NUM_FRAMES2 8
 
+// Animation 1
+const char* anim1_paths[NUM_FRAMES1] = {
+    "/home/connor/.bongocat/cat_rest.png",
+    "/home/connor/.bongocat/cat_left.png",
+    "/home/connor/.bongocat/cat_right.png",
+};
+unsigned char* anim1_imgs[NUM_FRAMES1];
+int anim1_width[NUM_FRAMES1], anim1_height[NUM_FRAMES1];
+int anim1_index = 0;
+pthread_mutex_t anim1_lock = PTHREAD_MUTEX_INITIALIZER;
 
-// --------------- Fire simulation -----------------
-int* firePixels;
-int palette[256][3];
-
-void make_palette() {
-    for (int i = 0; i < 256; i++) {
-        int r = i < 128 ? i*2 : 255;
-        int g = i < 128 ? 0 : (i-128)*2;
-        int b = 0;
-        palette[i][0] = r;
-        palette[i][1] = g;
-        palette[i][2] = b;
-    }
-}
-
-void init_fire_buffer() {
-    firePixels = calloc(fire_width * fire_height, sizeof(int));
-}
-
-void ignite_bottom() {
-    for (int x = 0; x < fire_width; x++) {
-        int intensity = rand() % 100 + 155; // 155-255
-        firePixels[(fire_height-1)*fire_width + x] = intensity;
-    }
-}
-
-void ignite_at(int mx, int my) {
-    if (mx < fire_x || mx >= fire_x + fire_width) return;
-    if (my < fire_y || my >= fire_y + fire_height) return;
-    int fx = mx - fire_x;
-    int fy = my - fire_y;
-    // make mouse ignition stronger near bottom
-    for (int y = fy; y < fire_height; y++) {
-        int idx = y * fire_width + fx;
-        firePixels[idx] = 255;
-    }
-}
-
-void do_fire_step() {
-    for (int y = 1; y < fire_height; y++) {
-        for (int x = 0; x < fire_width; x++) {
-            int src = y * fire_width + x;
-            int below = src + fire_width;
-            if (below >= fire_width * fire_height) continue;
-
-            int decay = rand() % 2 + 1;  // smaller decay to allow taller flames
-            int val = firePixels[below] - decay;
-
-            // Fade based on height (less aggressive)
-            val = val * (fire_height - y + 3) / fire_height;
-            if (val < 0) val = 0;
-
-            // Smooth swirl: consider neighbors
-            int left = x > 0 ? firePixels[below - 1] : 0;
-            int right = x < fire_width - 1 ? firePixels[below + 1] : 0;
-            val = (val + left + right) / 3;
-
-            // Slight horizontal jitter
-            int swirl = rand() % 3 - 1; // -1,0,1
-            int dst_x = x + swirl;
-            if (dst_x < 0) dst_x = 0;
-            if (dst_x >= fire_width) dst_x = fire_width - 1;
-
-            int dst = (y - 1) * fire_width + dst_x;
-            firePixels[dst] = val;
-        }
-    }
-
-    // Bottom row ignition: stronger & wider
-    for (int x = 0; x < fire_width; x++) {
-        if (rand() % 3 == 0) { // 1/3 chance for extra fire
-            firePixels[(fire_height - 1) * fire_width + x] = rand() % 100 + 155;
-        }
-    }
-}
+// Animation 2
+const char* anim2_paths[NUM_FRAMES2] = {
+    "/home/connor/.bongocat/k1_shrunk.png",
+    "/home/connor/.bongocat/k2_shrunk.png",
+    "/home/connor/.bongocat/k3_shrunk.png",
+    "/home/connor/.bongocat/k4_shrunk.png",
+    "/home/connor/.bongocat/k5_shrunk.png",
+    "/home/connor/.bongocat/k6_shrunk.png",
+    "/home/connor/.bongocat/k7_shrunk.png",
+    "/home/connor/.bongocat/k8_shrunk.png",
+};
 
 
-void render_fire() {
-    memset(pixels, 0, screen_width * screen_height * 4);
+// Animation 3
+const char* anim3_paths[NUM_FRAMES2] = {
+    "/home/connor/.bongocat/kuromi_blink_2_shrunk.png",
+    "/home/connor/.bongocat/kuromi_blink_1_shrunk.png",
+};
 
-    for (int y = 0; y < fire_height; y++) {
-        for (int x = 0; x < fire_width; x++) {
-            int colorIndex = firePixels[y * fire_width + x];
-            if (colorIndex == 0) continue;
-            int r = palette[colorIndex][0];
-            int g = palette[colorIndex][1];
-            int b = palette[colorIndex][2];
-            int px = (fire_y + y) * screen_width + (fire_x + x);
-            int idx = px * 4;
-            pixels[idx + 0] = b;
-            pixels[idx + 1] = g;
-            pixels[idx + 2] = r;
-            pixels[idx + 3] = 255;
-        }
-    }
-}
+unsigned char* anim2_imgs[NUM_FRAMES2];
+unsigned char* anim3_imgs[2];
+int anim2_width[NUM_FRAMES2], anim2_height[NUM_FRAMES2];
+int anim3_width[2], anim3_height[2];
+int anim2_index = 3;
+int anim3_index = 1;
+pthread_mutex_t anim2_lock = PTHREAD_MUTEX_INITIALIZER;
 
-// ------------------- Wayland SHM -------------------
-int create_shm(int size){
-    char name[]="/bar-shm-XXXXXX";
+//bool background_drawn = false;
+
+int create_shm(int size) {
+    char name[] = "/bar-shm-XXXXXX";
     int fd;
-    for(int i=0;i<100;i++){
-        for(int j=0;j<6;j++) name[9+j]='A'+(rand()%26);
-        fd = shm_open(name,O_RDWR|O_CREAT|O_EXCL,0600);
-        if(fd>=0){shm_unlink(name); break;}
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 6; j++) name[9 + j] = 'A' + (rand() % 26);
+        fd = shm_open(name, O_RDWR | O_CREAT | O_EXCL, 0600);
+        if (fd >= 0) {
+            shm_unlink(name);
+            break;
+        }
     }
-    if(fd<0||ftruncate(fd,size)<0){
-        perror("shm"); exit(1);
+    if (fd < 0 || ftruncate(fd, size) < 0) {
+        perror("shm");
+        exit(1);
     }
     return fd;
 }
 
-// ------------------- Wayland Listeners -------------------
-void layer_surface_configure(void* data, struct zwlr_layer_surface_v1* ls,
-                             uint32_t serial, uint32_t w, uint32_t h){
-    (void)data;(void)w;(void)h;
-    zwlr_layer_surface_v1_ack_configure(ls,serial);
+void blit_image(uint8_t* dest, int dest_w, int dest_h,
+                unsigned char* src, int src_w, int src_h,
+                int offset_x, int offset_y) {
+    for (int y = 0; y < src_h; y++) {
+        int dy = y + offset_y;
+        if (dy < 0 || dy >= dest_h) continue;
+        for (int x = 0; x < src_w; x++) {
+            int dx = x + offset_x;
+            if (dx < 0 || dx >= dest_w) continue;
+            int di = (dy * dest_w + dx) * 4;
+            int si = (y * src_w + x) * 4;
+            dest[di+0] = (uint8_t)(src[si+2]);
+            dest[di+1] = (uint8_t)(src[si+1]);
+            dest[di+2] = (uint8_t)(src[si+0]);
+            dest[di+3] = (uint8_t)(src[si+3]);
+            /*
+            float a = src[si+3] / 255.0f;
+            if (dy < 46) {
+                dest[di+0] = (uint8_t)(38 * (1-a) + src[si+2] * a);
+                dest[di+1] = (uint8_t)(27 * (1-a) + src[si+1] * a);
+                dest[di+2] = (uint8_t)(26 * (1-a) + src[si+0] * a);
+                dest[di+3] = 255;
+            } else {
+                memcpy(&dest[di], &src[si], 4);
+            }
+            */
+        }
+    }
 }
+
+/*
+void draw_rect(uint8_t* dest, int width, int height, int x, int y, int w, int h, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
+    for (int j = y; j < y + h; j++)
+        for (int i = x; i < x + w; i++) {
+            if (i < 0 || j < 0 || i >= width || j >= height) continue;
+            int idx = (j * width + i) * 4;
+            dest[idx+0] = b;
+            dest[idx+1] = g;
+            dest[idx+2] = r;
+            dest[idx+3] = a;
+        }
+}
+*/
+
+void draw_bar() {
+    if (!configured) return;
+    /*
+    if (!background_drawn) {
+        draw_rect(pixels, screen_width, bar_height, 0, 0, screen_width, 46, 26, 27, 38, 255);
+        background_drawn = true;
+    }
+    */
+    pthread_mutex_lock(&anim1_lock);
+    blit_image(pixels, screen_width, bar_height, anim1_imgs[anim1_index], anim1_width[anim1_index], anim1_height[anim1_index], screen_width/2+140, -4);
+    pthread_mutex_unlock(&anim1_lock);
+    pthread_mutex_lock(&anim2_lock);
+    blit_image(pixels, screen_width, bar_height, anim2_imgs[anim2_index], anim2_width[anim2_index], anim2_height[anim2_index], screen_width/2-200, -8);
+    blit_image(pixels, screen_width, bar_height, anim3_imgs[anim3_index], anim3_width[anim3_index], anim3_height[anim3_index], screen_width/2-270, -5); 
+    pthread_mutex_unlock(&anim2_lock);
+
+    wl_surface_attach(surface, buffer, 0, 0);
+    wl_surface_damage_buffer(surface, 0, 0, screen_width, bar_height);
+    wl_surface_commit(surface);
+    wl_display_flush(display);
+}
+
+void layer_surface_configure(void* data, struct zwlr_layer_surface_v1* ls, uint32_t serial, uint32_t w, uint32_t h) {
+    zwlr_layer_surface_v1_ack_configure(ls, serial);
+    configured = true;
+    draw_bar();
+}
+
 struct zwlr_layer_surface_v1_listener layer_listener = {
     .configure = layer_surface_configure,
-    .closed = NULL
+    .closed = NULL,
 };
 
-void registry_global(void* _, struct wl_registry* reg, uint32_t name,
-                     const char* iface, uint32_t ver){
-    (void)_;
-    if(strcmp(iface,wl_compositor_interface.name)==0)
-        compositor=wl_registry_bind(reg,name,&wl_compositor_interface,4);
-    else if(strcmp(iface,wl_shm_interface.name)==0)
-        shm=wl_registry_bind(reg,name,&wl_shm_interface,1);
-    else if(strcmp(iface,zwlr_layer_shell_v1_interface.name)==0)
-        layer_shell=wl_registry_bind(reg,name,&zwlr_layer_shell_v1_interface,4);
-    else if(strcmp(iface,wl_seat_interface.name)==0)
-        seat=wl_registry_bind(reg,name,&wl_seat_interface,5);
-}
-void registry_remove(void* _, struct wl_registry* r, uint32_t name){(void)_;(void)r;(void)name;}
-struct wl_registry_listener reg_listener={
-    .global=registry_global,
-    .global_remove=registry_remove
-};
-
-// ------------------- Pointer -------------------
-void pointer_enter(void* d, struct wl_pointer* p, uint32_t s,
-                   struct wl_surface* surf, wl_fixed_t sx, wl_fixed_t sy){
-    (void)d;(void)p;(void)s;(void)surf;
-    mouse_x=wl_fixed_to_int(sx);
-    mouse_y=wl_fixed_to_int(sy);
-    ignite_at(mouse_x,mouse_y);
-}
-void pointer_leave(void* d, struct wl_pointer* p, uint32_t s, struct wl_surface* surf){
-    (void)d;(void)p;(void)s;(void)surf;
-    mouse_x=mouse_y=-1;
-}
-void pointer_motion(void* d, struct wl_pointer* p, uint32_t t, wl_fixed_t sx, wl_fixed_t sy){
-    (void)d;(void)p;(void)t;
-    mouse_x=wl_fixed_to_int(sx);
-    mouse_y=wl_fixed_to_int(sy);
-    ignite_at(mouse_x,mouse_y);
-}
-void pointer_button(void* d, struct wl_pointer* p, uint32_t s, uint32_t t, uint32_t b, uint32_t st){(void)d;(void)p;(void)s;(void)t;(void)b;(void)st;}
-void pointer_axis(void* d, struct wl_pointer* p, uint32_t t, uint32_t axis, wl_fixed_t v){(void)d;(void)p;(void)t;(void)axis;(void)v;}
-struct wl_pointer_listener pointer_listener={
-    .enter=pointer_enter,
-    .leave=pointer_leave,
-    .motion=pointer_motion,
-    .button=pointer_button,
-    .axis=pointer_axis
-};
-
-void seat_handle_capabilities(void* d, struct wl_seat* s, uint32_t caps){
-    if(caps & WL_SEAT_CAPABILITY_POINTER){
-        pointer = wl_seat_get_pointer(s);
-        wl_pointer_add_listener(pointer,&pointer_listener,NULL);
+void* animate1(void* _) {
+    struct timespec ts = {0, 16 * 1000000};
+    struct timeval last, now;
+    long hold_until = 0;
+    gettimeofday(&last, NULL);
+    while (1) {
+        gettimeofday(&now, NULL);
+        long now_us = now.tv_sec * 1000000 + now.tv_usec;
+        pthread_mutex_lock(&anim1_lock);
+        if (*any_key_pressed) {
+            anim1_index = (rand()%2)+1;
+            hold_until = now_us + 100000;
+        } else if (now_us > hold_until) anim1_index = 0;
+        pthread_mutex_unlock(&anim1_lock);
+        *any_key_pressed = 0;
+        draw_bar();
+        nanosleep(&ts, NULL);
     }
 }
-void seat_handle_name(void* d, struct wl_seat* s, const char* name){(void)d;(void)s;(void)name;}
-struct wl_seat_listener seat_listener={
-    .capabilities=seat_handle_capabilities,
-    .name=seat_handle_name
-};
 
-// ------------------- Update loop -------------------
-void* update(void* _){
-    (void)_;
-    struct timespec ts={0,33*1000000};
-    while(1){
-        do_fire_step();
-        render_fire();
-        wl_surface_attach(surface,buffer,0,0);
-        wl_surface_damage_buffer(surface,0,0,screen_width,screen_height);
-        wl_surface_commit(surface);
-        wl_display_flush(display);
-        nanosleep(&ts,NULL);
+void* animate2(void* _) {
+    struct timespec ts = {0, 16 * 1000000};
+    struct timeval last, now, last2, now2;
+    gettimeofday(&last, NULL);
+    gettimeofday(&last2, NULL);
+    while (1) {
+        gettimeofday(&now, NULL);
+        gettimeofday(&now2, NULL);
+        long diff = (now.tv_sec - last.tv_sec) * 1000000 + (now.tv_usec - last.tv_usec);
+        long diff2 = (now2.tv_sec - last2.tv_sec) * 1000000 + (now2.tv_usec - last2.tv_usec);
+        pthread_mutex_lock(&anim2_lock);
+        if (diff < 1000000) anim2_index = 3;
+        else if (diff < 1900000) anim2_index = 4;
+        else if (diff < 2200000) anim2_index = 5;
+        else if (diff < 2500000) anim2_index = 6;
+        else if (diff < 2800000) anim2_index = 7;
+        else if (diff < 4000000) anim2_index = 7;
+        else if (diff < 5000000) anim2_index = 0;
+        else if (diff < 5100000) anim2_index = 1;
+        else if (diff < 6100000) anim2_index = 2;
+        else if (diff < 6200000) anim2_index = 1;
+        else last = now;
+
+        if (diff2 < 1500000) {
+            anim3_index = 1;
+        } else if (diff2 < 1700000) {
+            anim3_index = 0;
+        } else {
+            last2 = now2;
+        }
+
+        pthread_mutex_unlock(&anim2_lock);
+        draw_bar();
+        nanosleep(&ts, NULL);
     }
-    return NULL;
 }
 
-// ------------------- Main -------------------
-int main(){
-    srand(time(NULL));
+int get_screen_width() {
+    FILE *fp = popen("/usr/bin/hyprctl monitors active", "r");
+    char buf[1000];
+    fgets(buf, sizeof(buf), fp); // skip
+    fgets(buf, sizeof(buf), fp);
+    pclose(fp);
+    strtok(buf, "x");
+    return atoi(buf);
+}
 
-    display=wl_display_connect(NULL);
-    struct wl_registry* registry=wl_display_get_registry(display);
-    wl_registry_add_listener(registry,&reg_listener,NULL);
+void registry_global(void* _, struct wl_registry* reg, uint32_t name, const char* iface, uint32_t ver) {
+    if (strcmp(iface, wl_compositor_interface.name)==0)
+        compositor = wl_registry_bind(reg, name, &wl_compositor_interface, 4);
+    else if (strcmp(iface, wl_shm_interface.name)==0)
+        shm = wl_registry_bind(reg, name, &wl_shm_interface, 1);
+    else if (strcmp(iface, zwlr_layer_shell_v1_interface.name)==0)
+        layer_shell = wl_registry_bind(reg, name, &zwlr_layer_shell_v1_interface, 1);
+}
+
+void registry_remove(void* _, struct wl_registry* r, uint32_t name) {}
+struct wl_registry_listener reg_listener = {.global=registry_global, .global_remove=registry_remove};
+
+int main() {
+    usleep(2000000); // let waybar spawn first
+    screen_width = get_screen_width();
+    display = wl_display_connect(NULL);
+    struct wl_registry* registry = wl_display_get_registry(display);
+    wl_registry_add_listener(registry, &reg_listener, NULL);
     wl_display_roundtrip(display);
-    if(seat) wl_seat_add_listener(seat,&seat_listener,NULL);
 
-    surface=wl_compositor_create_surface(compositor);
-    layer_surface=zwlr_layer_shell_v1_get_layer_surface(layer_shell,surface,
-        NULL,ZWLR_LAYER_SHELL_V1_LAYER_TOP,"fire");
-    zwlr_layer_surface_v1_set_anchor(layer_surface,
-        ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP|
-        ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT|
-        ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT);
-    zwlr_layer_surface_v1_set_size(layer_surface,0,screen_height);
-    zwlr_layer_surface_v1_set_exclusive_zone(layer_surface,-1);
-    zwlr_layer_surface_v1_add_listener(layer_surface,&layer_listener,NULL);
+    surface = wl_compositor_create_surface(compositor);
+    layer_surface = zwlr_layer_shell_v1_get_layer_surface(layer_shell, surface, NULL,
+        ZWLR_LAYER_SHELL_V1_LAYER_TOP, "my-bar");
+    zwlr_layer_surface_v1_set_anchor(layer_surface, ZWLR_LAYER_SURFACE_V1_ANCHOR_TOP |
+        ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT | ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT);
+    zwlr_layer_surface_v1_set_size(layer_surface, 0, bar_height);
+    zwlr_layer_surface_v1_set_exclusive_zone(layer_surface, -1);
+    zwlr_layer_surface_v1_add_listener(layer_surface, &layer_listener, NULL);
 
-    struct wl_region* input_region=wl_compositor_create_region(compositor);
-    wl_surface_set_input_region(surface,input_region);
+
+    //zwlr_layer_surface_v1_set_keyboard_interactivity(layer_surface, ZWLR_LAYER_SURFACE_V1_KEYBOARD_INTERACTIVITY_NONE);
+    // Create an empty input region to make the surface click-through
+    struct wl_region *input_region = wl_compositor_create_region(compositor);
+    // Don't add any rectangles to the region, keeping it empty
+    wl_surface_set_input_region(surface, input_region);
     wl_region_destroy(input_region);
+
     wl_surface_commit(surface);
 
-    int size=screen_width*screen_height*4;
-    int fd=create_shm(size);
-    pixels=mmap(NULL,size,PROT_READ|PROT_WRITE,MAP_SHARED,fd,0);
-    struct wl_shm_pool* pool=wl_shm_create_pool(shm,fd,size);
-    buffer=wl_shm_pool_create_buffer(pool,0,screen_width,screen_height,
-                                     screen_width*4,WL_SHM_FORMAT_ARGB8888);
+    int size = screen_width * bar_height * 4;
+    int fd = create_shm(size);
+    pixels = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    struct wl_shm_pool* pool = wl_shm_create_pool(shm, fd, size);
+    buffer = wl_shm_pool_create_buffer(pool, 0, screen_width, bar_height, screen_width * 4, WL_SHM_FORMAT_ARGB8888);
     wl_shm_pool_destroy(pool);
     close(fd);
 
-    make_palette();
-    init_fire_buffer();
+    for (int i = 0; i < NUM_FRAMES1; i++) anim1_imgs[i] = stbi_load(anim1_paths[i], &anim1_width[i], &anim1_height[i], NULL, 4);
+    for (int i = 0; i < NUM_FRAMES2; i++) anim2_imgs[i] = stbi_load(anim2_paths[i], &anim2_width[i], &anim2_height[i], NULL, 4);
+    for (int i = 0; i < 2; i++) anim3_imgs[i] = stbi_load(anim3_paths[i], &anim3_width[i], &anim3_height[i], NULL, 4);
 
-    pthread_t t1;
-    pthread_create(&t1,NULL,update,NULL);
+    any_key_pressed = mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE, MAP_SHARED|MAP_ANONYMOUS, -1, 0);
+    pthread_t t1, t2;
+    pthread_create(&t1, NULL, animate1, NULL);
+    pthread_create(&t2, NULL, animate2, NULL);
 
-    while(wl_display_dispatch(display)!=-1){}
+    if (fork()) {
+        while (wl_display_dispatch(display) != -1) {}
+    } else {
+        FILE *fp;
+        fp = popen("/bin/echo /dev/input/by-path/*event-kbd", "r");
+        char devices[1000];
+        fgets(devices, sizeof(devices), fp);
+        devices[strlen(devices)-1] = '\0'; // just remove newline
+        pclose(fp);
 
+        char *device, *str;
+        str = strdup(devices);  
+        while ((device = strsep(&str, " "))) {
+            if (!fork()) {
+                capture(device);
+            }
+        }
+    }
     return 0;
 }

@@ -39,7 +39,11 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 vim.keymap.set("n", "<A-y>", "ggVGy")
 
 -- alt-d to delete entire file
-vim.keymap.set("n", "<A-d>", "ggVGd")
+vim.keymap.set("n", "<A-d>", "ggVG\"_dd")
+
+
+-- alt-a highlight all
+vim.keymap.set("n", "<A-a>", "ggVG")
 
 -- center cursor
 vim.keymap.set("n", "<A-w>", ':execute "normal! 0" . (col("$") / 2) . "|"<CR>     :echo ""<CR>')

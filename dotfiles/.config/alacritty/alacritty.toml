@@ -3,13 +3,18 @@ size = 20.0
 
 [font.normal]
 family = "Comic Mono"
-style = "Normal"
+style = "Mono"
 
 [colors.primary]
-#background = "0x1e1e2e"  # dark grey
-background = "0x292d3e" # light grey
-foreground = "0xd0d0d0"  # Light grey text
+background = "0x1e1e2e"  # dark grey
+#background = "0x292d3e" # light grey
+#foreground = "0xd0d0d0"  # Light grey text
+foreground = "#ffb8fc" # light pink text
 
 [window]
-opacity = 0.6
+opacity = 0.7
 #opacity = 1
+
+
+[colors.normal]
+magenta = "#bd62ec"

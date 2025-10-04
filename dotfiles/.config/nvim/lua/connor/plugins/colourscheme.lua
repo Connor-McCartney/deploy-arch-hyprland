@@ -15,14 +15,24 @@ local function HSV2RGB (h, s, v)
     return string.format("#%02x%02x%02x", r, g, b)
 end
 
+-- vim.cmd("let g:sonokai_colors_override = {" ..
+-- string.format("'yellow': ['%s', '0'],",   HSV2RGB(310, 0.45, 0.9)) .. -- strings
+-- string.format("'green':  ['%s', '0'],",   HSV2RGB(190, 0.45, 0.9)) .. -- function names
+-- string.format("'blue':   ['%s', '0'],",   HSV2RGB(190, 0.45, 0.9)) .. -- packages
+-- string.format("'orange': ['%s', '0'],",   HSV2RGB(0  , 0.00, 1.0)) .. -- struct/class vars
+-- string.format("'purple': ['%s', '0'],",   HSV2RGB(260, 0.45, 0.9)) .. -- numbers
+-- string.format("'red':    ['%s', '250']}", HSV2RGB(220, 0.45, 0.9)))   -- keywords
+
 
 vim.cmd("let g:sonokai_colors_override = {" ..
-string.format("'yellow': ['%s', '0'],",   HSV2RGB(310, 0.45, 0.9)) .. -- strings
-string.format("'green':  ['%s', '0'],",   HSV2RGB(190, 0.45, 0.9)) .. -- function names
-string.format("'blue':   ['%s', '0'],",   HSV2RGB(190, 0.45, 0.9)) .. -- packages
-string.format("'orange': ['%s', '0'],",   HSV2RGB(0  , 0.00, 1.0)) .. -- struct/class vars
-string.format("'purple': ['%s', '0'],",   HSV2RGB(260, 0.45, 0.9)) .. -- numbers
+string.format("'yellow': ['%s', '0'],",   HSV2RGB(0  , 0.00, 0.9)) .. -- strings
+string.format("'fg':     ['%s', '0'],",   HSV2RGB(300, 0.35, 0.9)) ..
+string.format("'green':  ['%s', '0'],",   HSV2RGB(260, 0.45, 0.9)) .. -- function names
+string.format("'blue':   ['%s', '0'],",   HSV2RGB(260, 0.45, 0.9)) .. -- packages
+string.format("'orange': ['%s', '0'],",   HSV2RGB(300, 0.35, 1.0)) .. -- struct/class vars
+string.format("'purple': ['%s', '0'],",   HSV2RGB(300, 0.35, 0.9)) .. -- numbers
 string.format("'red':    ['%s', '250']}", HSV2RGB(220, 0.45, 0.9)))   -- keywords
+
 
 -- https://github.com/sainnhe/sonokai/blob/master/doc/sonokai.txt
 vim.g.sonokai_transparent_background = true
@@ -37,7 +47,8 @@ return {
 
     -- defer overrides so Sonokai doesn't overwrite them
     vim.schedule(function()
-      --vim.api.nvim_set_hl(0, "CursorLine",   { bg = "#f7a3f1", fg = "None" })
+      vim.api.nvim_set_hl(0, "CursorLine",   { bg = "#370471", fg = "None"    })
+      vim.api.nvim_set_hl(0, "LineNr",       { bg = "None",    fg = "#ffb8fc" })
       --vim.api.nvim_set_hl(0, "StatusLine",   { bg = "#ff00ff", fg = "#ffffff" })
       --vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#ffffff", fg = "#cccccc" })
       --vim.api.nvim_set_hl(0, "PmenuSel",     { bg = "#0000ff", fg = "#ffffff" })
@@ -45,6 +56,3 @@ return {
 
     end,
 }
-
-
-

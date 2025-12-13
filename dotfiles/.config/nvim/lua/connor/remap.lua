@@ -53,3 +53,5 @@ vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'
 
 -- I keep accidentally hitting 'menu' physical key, just disable it
 vim.keymap.set({"n", "i", "v"}, "", "<nop>", { noremap = true })
+vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
+

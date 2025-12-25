@@ -1,39 +1,33 @@
 return {
-    "nvim-treesitter/nvim-treesitter",
-    event = { "BufReadPre", "BufNewFile" },
-    build = ":TSUpdate",
+    'nvim-treesitter/nvim-treesitter',
     dependencies = {
-        "windwp/nvim-ts-autotag",
+        'nvim-treesitter/nvim-treesitter-context',
     },
+    branch = 'main',
+    lazy = false,
+    build = ':TSUpdate',
     config = function()
-        local treesitter = require("nvim-treesitter.configs")
-
-        treesitter.setup({
-            highlight = {
-                enable = true,
-                additional_vim_regex_highlighting = false,
-            },
-            ensure_installed = {
-                "odin",
-                "json",
-                "javascript",
-                "typescript",
-                "tsx",
-                "yaml",
-                "html",
-                "css",
-                "markdown",
-                "markdown_inline",
-                "bash",
-                "lua",
-                "vim",
-                "dockerfile",
-                "c",
-                "cpp",
-                "python",
-                "rust",
-                "cmake",
-            },
+        local treesitter = require('nvim-treesitter')
+        treesitter.install({
+            "odin",
+            "json",
+            "javascript",
+            "typescript",
+            "tsx",
+            "yaml",
+            "html",
+            "css",
+            "markdown",
+            "markdown_inline",
+            "bash",
+            "lua",
+            "vim",
+            "dockerfile",
+            "c",
+            "cpp",
+            "python",
+            "rust",
+            "cmake",
         })
     end,
 }

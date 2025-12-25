@@ -22,6 +22,7 @@ alias sc="printf \"\033[?25h\"" # show cursor
 alias s=sage
 alias xx="nvim x.sage"
 alias x="sage x.sage"
+alias clear="printf '\E[H\E[3J'"
 
 cx() {
   chmod +x "$1"

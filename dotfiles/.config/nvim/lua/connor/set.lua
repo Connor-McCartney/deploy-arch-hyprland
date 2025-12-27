@@ -14,7 +14,20 @@ vim.opt.wrap = false          --disable line wrapping
 vim.opt.scrolloff = 8         --line from top/bottom until scrolling
 vim.opt.cursorline = true     --highlight current line
 vim.opt.swapfile = false      --disable annoying swapfiles
+
+vim.filetype.add {
+  extension = {
+    sage= "sage",
+  },
+}
+
 vim.treesitter.language.register('python', 'sage')  -- treesitter highlighting for sagemath
+
+-- actually start treesitter
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { '*' },
+  callback = function() vim.treesitter.start() end,
+})
 
 -- disable history popup
 vim.cmd("nnoremap q: <nop>")
@@ -39,7 +52,7 @@ vim.opt.wrap = false          --disable line wrapping
 vim.opt.scrolloff = 8         --line from top/bottom until scrolling
 vim.opt.cursorline = true     --highlight current line
 vim.opt.swapfile = false      --disable annoying swapfiles
-vim.treesitter.language.register('python', 'sage')  -- treesitter highlighting for sagemath
+vim.treesitter.language.register('python', {'sage'})  -- treesitter highlighting for sagemath
 
 -- disable history popup
 vim.cmd("nnoremap q: <nop>")

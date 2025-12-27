@@ -41,7 +41,6 @@ vim.keymap.set("n", "<A-y>", "ggVGy")
 -- alt-d to delete entire file
 vim.keymap.set("n", "<A-d>", "ggVG\"_dd")
 
-
 -- alt-a highlight all
 vim.keymap.set("n", "<A-a>", "ggVG")
 
@@ -55,3 +54,8 @@ vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'
 vim.keymap.set({"n", "i", "v"}, "", "<nop>", { noremap = true })
 vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
 
+-- alt-z quit without saving
+vim.keymap.set({ "n", "i", "v" }, "<A-z>", "ZQ", { noremap = true })
+
+-- alt-k escape
+vim.keymap.set({ "n", "i", "v" }, "<A-j>", "<Esc>:w<CR>", { noremap = true })

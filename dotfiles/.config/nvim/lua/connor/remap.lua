@@ -48,14 +48,13 @@ vim.keymap.set("n", "<A-a>", "ggVG")
 vim.keymap.set("n", "<A-w>", ':execute "normal! 0" . (col("$") / 2) . "|"<CR>     :echo ""<CR>')
 
 -- surround-nvim shortcuts
-vim.keymap.set("n", "t", "ysiw", {remap=true}) -- surround word with eg t", t'
+vim.keymap.set("n", "<A-t>", "ysiw", {remap=true}) -- surround word with eg t", t'
 
 -- I keep accidentally hitting 'menu' physical key, just disable it
 vim.keymap.set({"n", "i", "v"}, "", "<nop>", { noremap = true })
 vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
 
--- alt-z quit without saving
-vim.keymap.set({ "n", "i", "v" }, "<A-z>", "ZQ", { noremap = true })
 
--- alt-k escape
+
+vim.keymap.set({ "n", "i", "v" }, "<A-z>", "ZQ", { noremap = true })
 vim.keymap.set({ "n", "i", "v" }, "<A-j>", "<Esc>:w<CR>", { noremap = true })

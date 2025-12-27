@@ -25,7 +25,31 @@ vim.treesitter.language.register('python', 'sage')  -- treesitter highlighting f
 
 -- actually start treesitter
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { '*' },
+  pattern = { 
+
+        "sage",
+        "odin",
+        "json",
+        "javascript",
+        "typescript",
+        "tsx",
+        "yaml",
+        "html",
+        "css",
+        "markdown",
+        "markdown_inline",
+        "bash",
+        "lua",
+        "vim",
+        "dockerfile",
+        "c",
+        "cpp",
+        "python",
+        "rust",
+        "cmake",
+
+  },
+
   callback = function() vim.treesitter.start() end,
 })
 

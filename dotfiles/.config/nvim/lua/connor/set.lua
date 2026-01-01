@@ -3,7 +3,6 @@ vim.opt.tabstop = 4
 vim.softtapstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
-
 vim.opt.termguicolors = true
 vim.opt.guicursor = ""        --match terminal cursor
 vim.opt.nu = true             --line numbers
@@ -14,51 +13,13 @@ vim.opt.wrap = false          --disable line wrapping
 vim.opt.scrolloff = 8         --line from top/bottom until scrolling
 vim.opt.cursorline = true     --highlight current line
 vim.opt.swapfile = false      --disable annoying swapfiles
-
-vim.filetype.add {
-  extension = {
-    sage= "sage",
-  },
-}
-
 vim.treesitter.language.register('python', 'sage')  -- treesitter highlighting for sagemath
-
--- actually start treesitter
-vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 
-
-        "sage",
-        "odin",
-        "json",
-        "javascript",
-        "typescript",
-        "tsx",
-        "yaml",
-        "html",
-        "css",
-        "markdown",
-        "markdown_inline",
-        "bash",
-        "lua",
-        "vim",
-        "dockerfile",
-        "c",
-        "cpp",
-        "python",
-        "rust",
-        "cmake",
-
-  },
-
-  callback = function() vim.treesitter.start() end,
-})
 
 -- disable history popup
 vim.cmd("nnoremap q: <nop>")
 
 -- https://www.reddit.com/r/neovim/comments/13585hy/trying_to_disable_autocomments_on_new_line_eg
 vim.cmd('autocmd BufEnter * set formatoptions-=cro')
-
 
 --indentation
 vim.opt.tabstop = 4
@@ -76,7 +37,7 @@ vim.opt.wrap = false          --disable line wrapping
 vim.opt.scrolloff = 8         --line from top/bottom until scrolling
 vim.opt.cursorline = true     --highlight current line
 vim.opt.swapfile = false      --disable annoying swapfiles
-vim.treesitter.language.register('python', {'sage'})  -- treesitter highlighting for sagemath
+vim.treesitter.language.register('python', 'sage')  -- treesitter highlighting for sagemath
 
 -- disable history popup
 vim.cmd("nnoremap q: <nop>")
@@ -94,6 +55,25 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-
 vim.g.neovide_opacity = 0.8
 vim.g.neovide_normal_opacity = 0.8
+
+
+-- autosave
+vim.api.nvim_create_autocmd({"InsertLeave", "TextChanged", "TextChangedI"}, {
+    callback = function ()
+        if vim.bo.readonly then
+            vim.api.nvim_echo({{"Read only!!!", "Normal"}}, false, {})
+            return
+        end
+        if not vim.bo.modifiable then
+            vim.api.nvim_echo({{"not modifiable!!!", "Normal"}}, false, {})
+            return
+        end
+        if not vim.bo.modified then
+            --vim.api.nvim_echo({{"no changes were made!!!", "Normal"}}, false, {})
+            return
+        end
+        vim.cmd("write")
+    end
+})

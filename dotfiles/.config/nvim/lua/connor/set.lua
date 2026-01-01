@@ -60,7 +60,7 @@ vim.g.neovide_normal_opacity = 0.8
 
 
 -- autosave
-vim.api.nvim_create_autocmd({"InsertLeave", "TextChanged", "TextChangedI"}, {
+vim.api.nvim_create_autocmd({"InsertLeave", "TextChanged"}, {
     callback = function ()
         if vim.bo.readonly then
             vim.api.nvim_echo({{"Read only!!!", "Normal"}}, false, {})
@@ -74,6 +74,23 @@ vim.api.nvim_create_autocmd({"InsertLeave", "TextChanged", "TextChangedI"}, {
             --vim.api.nvim_echo({{"no changes were made!!!", "Normal"}}, false, {})
             return
         end
-        vim.cmd("write")
+        vim.cmd("w")
+    end
+})
+vim.api.nvim_create_autocmd({"TextChangedI"}, {
+    callback = function ()
+        if vim.bo.readonly then
+            vim.api.nvim_echo({{"Read only!!!", "Normal"}}, false, {})
+            return
+        end
+        if not vim.bo.modifiable then
+            vim.api.nvim_echo({{"not modifiable!!!", "Normal"}}, false, {})
+            return
+        end
+        if not vim.bo.modified then
+            --vim.api.nvim_echo({{"no changes were made!!!", "Normal"}}, false, {})
+            return
+        end
+        vim.cmd("silent w")
     end
 })

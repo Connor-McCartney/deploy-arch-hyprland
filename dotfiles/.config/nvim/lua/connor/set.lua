@@ -58,6 +58,36 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.g.neovide_opacity = 0.8
 vim.g.neovide_normal_opacity = 0.8
 
+-- actually start treesitter
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = {
+
+        "sage",
+        "odin",
+        "json",
+        "javascript",
+        "typescript",
+        "tsx",
+        "yaml",
+        "html",
+        "css",
+        "markdown",
+        "markdown_inline",
+        "bash",
+        "lua",
+        "vim",
+        "dockerfile",
+        "c",
+        "cpp",
+        "python",
+        "rust",
+        "cmake",
+
+  },
+
+  callback = function() vim.treesitter.start() end,
+})
+
 
 -- autosave
 vim.api.nvim_create_autocmd({"InsertLeave", "TextChanged"}, {

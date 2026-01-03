@@ -56,4 +56,4 @@ vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
 
 
 -- if autosave is on, no point differeing ZZ and ZQ, just use Z all the time
-vim.keymap.set({ "n", "v" }, "Z", "ZQ", { noremap = true })
+vim.keymap.set({ "n", "v" }, "Z", "ZZ", { noremap = true })

@@ -55,6 +55,5 @@ vim.keymap.set({"n", "i", "v"}, "", "<nop>", { noremap = true })
 vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
 
 
-
-vim.keymap.set({ "n", "i", "v" }, "<A-z>", "ZQ", { noremap = true })
-vim.keymap.set({ "n", "i", "v" }, "<A-j>", "<Esc>:w<CR>", { noremap = true })
+-- if autosave is on, no point differeing ZZ and ZQ, just use Z all the time
+vim.keymap.set({ "n", "v" }, "Z", "ZQ", { noremap = true })

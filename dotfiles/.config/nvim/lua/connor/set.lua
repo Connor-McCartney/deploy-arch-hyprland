@@ -82,6 +82,7 @@ vim.api.nvim_create_autocmd('FileType', {
         "python",
         "rust",
         "cmake",
+        "asm",
 
   },
 

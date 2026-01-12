@@ -32,6 +32,7 @@ return {
                 "python",
                 "rust",
                 "cmake",
+                "asm",
         })
     end,
 }

@@ -57,7 +57,5 @@ vim.keymap.set({ "n", "i", "v" }, "<S->", "<nop>", { noremap = true })
 -- if autosave is on, no point differeing ZZ and ZQ, just use Z all the time
 vim.keymap.set({ "n", "v" }, "Z", "ZZ", { noremap = true })
 
-
--- in insert mode, ctrl-j and ctrl-k act like arrow keys
-vim.keymap.set({ "i" }, "<C-j>", "<Left>", { noremap = true })
-vim.keymap.set({ "i" }, "<C-k>", "<Right>", { noremap = true })
+vim.keymap.set({ "i" }, "<A-h>", "<Left>", { noremap = true })
+vim.keymap.set({ "i" }, "<A-l>", "<Right>", { noremap = true })
